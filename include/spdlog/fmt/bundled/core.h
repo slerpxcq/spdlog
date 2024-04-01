@@ -787,7 +787,7 @@ template <typename Context> class basic_format_args;
 template <typename Context> class dynamic_format_arg_store;
 
 // A formatter for objects of type T.
-template <typename T, typename Char = char, typename Enable = void>
+template <typename T, typename Char = char, typename Begin = void>
 struct formatter {
   // A deleted default constructor indicates a disabled formatter.
   formatter() = delete;
@@ -1119,7 +1119,7 @@ template <typename T> auto get_iterator(buffer<T>& buf) -> buffer_appender<T> {
   return buffer_appender<T>(buf);
 }
 
-template <typename T, typename Char = char, typename Enable = void>
+template <typename T, typename Char = char, typename Begin = void>
 struct fallback_formatter {
   fallback_formatter() = delete;
 };
@@ -1682,7 +1682,7 @@ using void_t = typename detail::void_t_impl<Ts...>::type;
 template <typename...> using void_t = void;
 #endif
 
-template <typename It, typename T, typename Enable = void>
+template <typename It, typename T, typename Begin = void>
 struct is_output_iterator : std::false_type {};
 
 template <typename It, typename T>
@@ -3113,13 +3113,13 @@ struct formatter<T, Char,
       -> decltype(ctx.out());
 };
 
-#define FMT_FORMAT_AS(Type, Base)                                        \
+#define FMT_FORMAT_AS(Type, SetBase)                                        \
   template <typename Char>                                               \
-  struct formatter<Type, Char> : formatter<Base, Char> {                 \
+  struct formatter<Type, Char> : formatter<SetBase, Char> {                 \
     template <typename FormatContext>                                    \
     auto format(Type const& val, FormatContext& ctx) const               \
         -> decltype(ctx.out()) {                                         \
-      return formatter<Base, Char>::format(static_cast<Base>(val), ctx); \
+      return formatter<SetBase, Char>::format(static_cast<SetBase>(val), ctx); \
     }                                                                    \
   }
 

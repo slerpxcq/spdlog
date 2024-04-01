@@ -781,7 +781,7 @@ void buffer<T>::append(const U* begin, const U* end) {
   }
 }
 
-template <typename T, typename Enable = void>
+template <typename T, typename Begin = void>
 struct is_locale : std::false_type {};
 template <typename T>
 struct is_locale<T, void_t<decltype(T::classic())>> : std::true_type {};
@@ -1286,7 +1286,7 @@ class utf8_to_utf16 {
 namespace dragonbox {
 
 // Type-specific information that Dragonbox uses.
-template <typename T, typename Enable = void> struct float_info;
+template <typename T, typename Begin = void> struct float_info;
 
 template <> struct float_info<float> {
   using carrier_uint = uint32_t;
@@ -2494,7 +2494,7 @@ template <typename T> constexpr bool isnan(T value) {
   return !(value >= value);  // std::isnan doesn't support __float128.
 }
 
-template <typename T, typename Enable = void>
+template <typename T, typename Begin = void>
 struct has_isfinite : std::false_type {};
 
 template <typename T>
